@@ -6,10 +6,8 @@ class BotStrategies {
   }
 
   async onMessage(msg) {
-    console.log(msg.chat.id);
     if (!msg.text) return;
     if (msg.text.startsWith("/start")) return;
-
     if (msg.chat.id !== groupId) return this.#handleMessageFromUser(msg);
 
     return this.#handleMessageFromSupport(msg);
@@ -17,8 +15,8 @@ class BotStrategies {
 
   async #handleMessageFromUser(msg) {
     const sentMessage = await this.telegramBot.sendMessage(
-      groupId,
-      `Message from: ${msg.chat.id}.\n\n${msg.text}`
+        groupId,
+        `${msg.chat.id}\nОт:${msg.from.username}\n${msg.text}`
     );
 
     if (!sentMessage)
@@ -32,26 +30,25 @@ class BotStrategies {
     );
   }
 
-  async #handleMessageFromSupport(msg) {
+  async #handleMessageFromSupport(msg){
     if (!msg.text) return;
-    if (!msg.text.startsWith("/reply")) return;
-    try {
-      const [chatId, text] = [
-        +msg.text.split(" ")[1],
-        msg.text.split(" ").slice(2).join(" "),
-      ];
-      const sentReply = await this.telegramBot.sendMessage(chatId, text);
-      if (!sentReply)
-        return await this.telegramBot.sendMessage(
-          groupId,
-          "Ответ не отправлен, возникла ошибка на стороне telegram :("
+    if (!msg.reply_to_message) return;
+    if (!msg.reply_to_message.from.is_bot) return;
+    const userId = msg.reply_to_message.text.split("\n")[0];
+    if (!userId) return;
+    try{
+        const sentReply = await this.telegramBot.sendMessage(userId, msg.text);
+        if (!sentReply)
+            return await this.telegramBot.sendMessage(
+            groupId,
+            "Ответ не отправлен, возникла ошибка на стороне telegram :("
         );
-      return await this.telegramBot.sendMessage(groupId, "Ответ отправлен!");
-    } catch (e) {
+        return await this.telegramBot.sendMessage(groupId, "Ответ отправлен!");
+    }
+    catch (e) {
       return await this.telegramBot.sendMessage(
         groupId,
-        `Не верно введена команда '/reply <chatId> <text>', текст ошибки: ${e.message}`
-      );
+        `текст ошибки: ${e.message}`)
     }
   }
 }
