@@ -18,7 +18,7 @@
             font: inherit;
             vertical-align: baseline;">
             <li><a>yarn start</a> либо <a>npm run start</a> (чтобы запустить через pm2)</li>
-            <li><a>node srcindex.js</a> (обычный запуск через node)</li>
+            <li><a>node src/index.js</a> (обычный запуск через node)</li>
         </ul>
 </ol>
 
