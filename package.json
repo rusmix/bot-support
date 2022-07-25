@@ -6,13 +6,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --ignore ./src/group.json index.js",
-    "start": "npx pm2 start src/index.js"
+    "start": "npx pm2 start src/index.js",
+    "prisma:format": "npx prisma format",
+    "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma db push",
+    "db:update": "yarn prisma:format && yarn prisma:generate && yarn prisma:push"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "4.1.0",
     "dotenv": "^16.0.1",
-    "node-telegram-bot-api": "^0.58.0"
+    "node-telegram-bot-api": "^0.58.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "prisma-client-lib": "^1.34.12"
+  },
+  "devDependencies": {
+    "prisma": "4.1.0"
   }
 }
